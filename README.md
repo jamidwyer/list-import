@@ -1,145 +1,39 @@
-# Developing Microservices - Node, React, and Docker
+# Microservice Lists
 
-[![Build Status](https://travis-ci.org/mjhea0/microservice-movies.svg?branch=master)](https://travis-ci.org/mjhea0/microservice-movies)
-[![CircleCI](https://circleci.com/gh/mjhea0/microservice-movies.svg?style=svg)](https://circleci.com/gh/mjhea0/microservice-movies)
+| Name            | Service| Container| Tech                 |
+|-----------------|--------|----------|----------------------|
+| Web             | Web    | web      | React, React-Router  |
+| Lists API       | Lists  | lists    | Node, Express        |
+| Lists DB        | Lists  | lists-db | Postgres             |
+| Swagger         | Lists  | swagger  | Swagger UI           |
+| Users API       | Users  | users    | Node, Express        |
+| Users DB        | Users  | users-db | Postgres             |
+| Functional Tests| Test   | n/a      | TestCafe             |
 
-http://mherman.org/microservice-movies/
+## TODO
 
-## Architecture
+* failing users tests
+* push
+* deprecated gulp-util@3.0.8: gulp-util is deprecated - replace it, following the guidelines at https://medium.com/gulpjs/gulp-util-ca3b1f9f9ac5
+* deprecated json3@3.3.2: Please use the native JSON object instead of JSON 3
+* deprecated superagent@2.3.0: Please note that v5.0.1+ of superagent removes User-Agent header by default, therefore you may need to add it yourself (e.g. GitHub blocks requests without a User-Agent header).  This notice will go away with v5.0.2+ once it is released.deprecated extract-text-webpack-plugin@1.0.1: Deprecated. Please use https://github.com/webpack-contrib/mini-css-extract-plugin
+npm WARN deprecated fsevents@1.0.17: Way too old
+npm WARN deprecated browserslist@1.7.7: Browserslist 2 could fail on reading Browserslist >3.0 config used in other tools.
+npm WARN deprecated hawk@3.1.3: This module moved to @hapi/hawk. Please make sure to switch over as this distribution is no longer supported and may contain bugs and critical security issues.
+npm WARN deprecated hoek@2.16.3: This version has been deprecated in accordance with the hapi support policy (hapi.im/support). Please upgrade to the latest version to get the best features, bug fixes, and security patches. If you are unable to upgrade at this time, paid support is available for older versions (hapi.im/commercial).
+npm WARN deprecated cryptiles@2.0.5: This version has been deprecated in accordance with the hapi support policy (hapi.im/support). Please upgrade to the latest version to get the best features, bug fixes, and security patches. If you are unable to upgrade at this time, paid support is available for older versions (hapi.im/commercial).
+npm WARN deprecated sntp@1.0.9: This module moved to @hapi/sntp. Please make sure to switch over as this distribution is no longer supported and may contain bugs and critical security issues.
+npm WARN deprecated boom@2.10.1: This version has been deprecated in accordance with the hapi support policy (hapi.im/support). Please upgrade to the latest version to get the best features, bug fixes, and security patches. If you are unable to upgrade at this time, paid support is available for older versions (hapi.im/commercial).
+npm WARN deprecated circular-json@0.3.3: CircularJSON is in maintenance only, flatted is its successor.
+npm WARN deprecated flatten@1.0.2: I wrote this module a very long time ago; you should use something else.
+* deprecated minimatch@2.0.10: Please update to minimatch 3.0.2 or higher to avoid a RegExp DoS issue
+npm WARN deprecated natives@1.1.6: This module relies on Node.js's internals and will break at some point. Do not use it, and update to graceful-fs@4.x.
+npm WARN deprecated circular-json@0.3.3: CircularJSON is in maintenance only, flatted is its successor.
+npm WARN deprecated minimatch@0.2.14: Please update to minimatch 3.0.2 or higher to avoid a RegExp DoS issue
+npm WARN deprecated graceful-fs@1.2.3: please upgrade to graceful-fs 4 for compatibility with current and future versions of Node.js
+* 
+* webpack
 
-| Name             | Service | Container | Tech                 |
-|------------------|---------|-----------|----------------------|
-| Web              | Web     | web       | React, React-Router  |
-| Movies API       | Movies  | movies    | Node, Express        |
-| Movies DB        | Movies  | movies-db | Postgres             |
-| Swagger          | Movies  | swagger   | Swagger UI           |
-| Users API        | Users   | users     | Node, Express        |
-| Users DB         | Users   | users-db  | Postgres             |
-| Functional Tests | Test    | n/a       | TestCafe             |
+## Thank you! 
 
-
-## Want to learn how to build this project?
-
-Check out the [blog post](http://mherman.org/blog/2017/05/11/developing-microservices-node-react-docker/).
-
-## Want to use this project?
-
-### Setup
-
-1. Fork/Clone this repo
-
-1. Download [Docker](https://docs.docker.com/docker-for-mac/install/) (if necessary)
-
-1. Make sure you are using a Docker version >= 17:
-
-    ```sh
-    $ docker -v
-    Docker version 17.03.0-ce, build 60ccb22
-    ```
-
-### Build and Run the App
-
-#### Set the Environment variables
-
-```sh
-$ export NODE_ENV=development
-```
-
-#### Fire up the Containers
-
-Build the images:
-
-```sh
-$ docker-compose build
-```
-
-Run the containers:
-
-```sh
-$ docker-compose up -d
-```
-
-#### Migrate and Seed
-
-With the apps up, run:
-
-```sh
-$ sh init_db.sh
-```
-
-#### Sanity Check
-
-Test out the following services...
-
-##### (1) Users - http://localhost:3000
-
-| Endpoint        | HTTP Method | CRUD Method | Result        |
-|-----------------|-------------|-------------|---------------|
-| /users/ping     | GET         | READ        | `pong`        |
-| /users/register | POST        | CREATE      | add a user    |
-| /users/login    | POST        | CREATE      | log in a user |
-| /users/user     | GET         | READ        | get user info |
-
-##### (2) Movies - http://localhost:3001
-
-| Endpoint      | HTTP Method | CRUD Method | Result                    |
-|---------------|-------------|-------------|---------------------------|
-| /movies/ping  | GET         | READ        | `pong`                    |
-| /movies/user  | GET         | READ        | get all movies by user    |
-| /movies       | POST        | CREATE      | add a single movie        |
-
-##### (3) Web - http://localhost:3007
-
-| Endpoint   | HTTP Method | CRUD Method | Result                  |
-|-------------|-------------|-------------|------------------------|
-| /           | GET         | READ        | render main page       |
-| /login      | GET         | READ        | render login page      |
-| /register   | GET         | READ        | render register page   |
-| /logout     | GET         | READ        | log a user out         |
-| /collection | GET         | READ        | render collection page |
-
-##### (4) Movies Database and (5) Users Database
-
-To access, get the container id from `docker ps` and then open `psql`:
-
-```sh
-$ docker exec -ti <container-id> psql -U postgres
-```
-
-##### (6) Functional Tests
-
-With the containers up running and TestCafe globally installed, run:
-
-```sh
-$ sh test.sh
-```
-
-##### (7) Swagger - http://localhost:3003/docs
-
-Access Swagger docs at the above URL
-
-#### Commands
-
-To stop the containers:
-
-```sh
-$ docker-compose stop
-```
-
-To bring down the containers:
-
-```sh
-$ docker-compose down
-```
-
-Want to force a build?
-
-```sh
-$ docker-compose build --no-cache
-```
-
-Remove images:
-
-```sh
-$ docker rmi $(docker images -q)
-```
+https://mherman.org/blog/developing-microservices-node-react-docker/
