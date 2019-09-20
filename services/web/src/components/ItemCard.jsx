@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MovieCard = (props) => {
+const ItemCard = (props) => {
   return (
     <div className='col-md-4'>
       <div className='panel panel-info'>
@@ -12,7 +12,7 @@ const MovieCard = (props) => {
         </div>
         <button
           className='btn btn-primary btn-sm'
-          onClick={ () => props.saveMovie(props.title) }
+          onClick={ () => props.saveItem(props.title) }
         >Add to Collection
         </button>
       </div>
@@ -20,4 +20,4 @@ const MovieCard = (props) => {
   )
 }
 
-export default MovieCard;
+export default ItemCard;

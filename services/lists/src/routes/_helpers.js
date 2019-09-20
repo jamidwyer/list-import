@@ -6,7 +6,7 @@ let ensureAuthenticated = (req, res, next) => {
   }
   const options = {
     method: 'GET',
-    uri: 'http://lists-service:3001/lists/list',
+    uri: 'http://lists-service:3001/lists/user',
     json: true,
     headers: {
       'Content-Type': 'application/json',

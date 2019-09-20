@@ -1,5 +1,14 @@
 # Microservice Lists
 
+## Summary
+Still working through:
+https://mherman.org/blog/developing-microservices-node-react-docker/
+
+Currently, to start things up, this might work:
+`NODE_ENV=development docker-compose up --build -d web-service`
+
+
+## Structure
 | Name            | Service| Container| Tech                 |
 |-----------------|--------|----------|----------------------|
 | Web             | Web    | web      | React, React-Router  |
@@ -12,8 +21,10 @@
 
 ## TODO
 
+* docker-compose up, baby
+* error message on failed registration
+* add items service
 * failing users tests
-* push
 * deprecated gulp-util@3.0.8: gulp-util is deprecated - replace it, following the guidelines at https://medium.com/gulpjs/gulp-util-ca3b1f9f9ac5
 * deprecated json3@3.3.2: Please use the native JSON object instead of JSON 3
 * deprecated superagent@2.3.0: Please note that v5.0.1+ of superagent removes User-Agent header by default, therefore you may need to add it yourself (e.g. GitHub blocks requests without a User-Agent header).  This notice will go away with v5.0.2+ once it is released.deprecated extract-text-webpack-plugin@1.0.1: Deprecated. Please use https://github.com/webpack-contrib/mini-css-extract-plugin
@@ -33,7 +44,3 @@ npm WARN deprecated minimatch@0.2.14: Please update to minimatch 3.0.2 or higher
 npm WARN deprecated graceful-fs@1.2.3: please upgrade to graceful-fs 4 for compatibility with current and future versions of Node.js
 * 
 * webpack
-
-## Thank you! 
-
-https://mherman.org/blog/developing-microservices-node-react-docker/
