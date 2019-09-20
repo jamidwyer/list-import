@@ -6,7 +6,6 @@ const API_URL = 'http://www.omdbapi.com/?apikey=c5a8df09&s='; // sample
 const USERS_SERVICE_URL = process.env.REACT_APP_USERS_SERVICE_URL;
 const MOVIES_SERVICE_URL = process.env.REACT_APP_MOVIES_SERVICE_URL;
 
-
 import './App.css';
 
 import SearchBar from './components/SearchBar';
