@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const SavedMovies = (props) => {
+const SavedItems = (props) => {
 
   return (
     <div>
@@ -18,12 +18,12 @@ const SavedMovies = (props) => {
         </thead>
         <tbody>
           {
-            props.saved.map((movie) => {
+            props.saved.map((item) => {
               return (
-                <tr key={movie.id}>
-                  <td>{ movie.id }</td>
-                  <td>{ movie.title }</td>
-                  <td>{ movie.created_at }</td>
+                <tr key={item.id}>
+                  <td>{ item.id }</td>
+                  <td>{ item.title }</td>
+                  <td>{ item.created_at }</td>
                 </tr>
               )
             })
@@ -34,4 +34,4 @@ const SavedMovies = (props) => {
   )
 }
 
-export default SavedMovies;
+export default SavedItems;
