@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from './Button';
 
 const ItemCard = (props) => {
   return (
@@ -10,11 +11,7 @@ const ItemCard = (props) => {
         <div className='panel-body'>
           <img src={props.posterUrl} alt='Presentation' />
         </div>
-        <button
-          className='btn btn-primary btn-sm'
-          onClick={ () => props.saveItem(props.title) }
-        >Add to Collection
-        </button>
+        <Button props />
       </div>
     </div>
   )

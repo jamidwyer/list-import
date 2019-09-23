@@ -1,18 +1,18 @@
-import React, {Component} from 'react'
-import { Route, Redirect, Switch, Link } from 'react-router-dom'
-import axios from 'axios'
-
-const API_URL = 'http://www.omdbapi.com/?apikey=5e859cf9&s=';
-
+import React, {Component} from 'react';
+import { Route, Redirect, Switch, Link } from 'react-router-dom';
+import axios from 'axios';
 import './App.css';
 
 import SearchBar from './components/SearchBar';
 import ItemList from './components/ItemList';
 import LoginForm from './components/LoginForm';
+import TextInput from './components/TextInput';
 import RegisterForm from './components/RegisterForm';
 import FlashMessages from './components/FlashMessages';
 import NotFound from './components/NotFound';
 import SavedItems from './components/SavedItems';
+
+const API_URL = 'http://www.omdbapi.com/?apikey=5e859cf9&s=';
 
 class App extends Component {
   constructor (props) {
@@ -120,6 +120,29 @@ class App extends Component {
     .then((res) => { this.getLists() })
     .catch((error) => { console.log(error); })
   }
+  submitText (userData, callback) {
+    // TODO: split by delimiter
+    // TODO: send the text through to lists and items
+    return axios.post('http://localhost:3000/items', userData)
+      .then((res) => {
+        this.createFlashMessage('Saved items')
+        this.props.history.push('/')
+        this.getItems()
+      })
+      .catch((error) => {
+        callback('Something went wrong')
+      }).then((res) => {
+        axios.post('http://localhost:3000/lists', res)
+        .then((res) => {
+          this.createFlashMessage('Saved list')
+          this.props.history.push('/')
+          this.getLists()
+        })
+        .catch((error) => {
+          callback('Something went wrong')
+        })
+      })
+  }
   getLists() {
     const options = {
       url: 'http://localhost:3001/lists/user',
@@ -147,10 +170,12 @@ class App extends Component {
           <Route exact path='/' render={() => (
             isAuthenticated
             ? <div className="container text-center">
-                <h1>Item Search</h1>
+                <h1>List Source</h1>
+                <Link to='/text-line-breaks'>Text separated by line breaks</Link>
+                <Link to='/pinterest'>Pinterest</Link>
+                <Link to='/text-commas'>Text separated by commas (CSV)</Link>
                 <SearchBar searchItem={this.searchItem.bind(this)} />
                 <a href="" onClick={this.logoutUser}>Logout</a>&nbsp;&#124;&nbsp;<Link to='/collection'>Collection</Link>
-                <br/><br/><br/>
                 <ItemList
                   items={this.state.items}
                   isAuthenticated={isAuthenticated}
@@ -183,6 +208,27 @@ class App extends Component {
               saved={this.state.saved} />
             : <Redirect to={{ pathname: '/login' }} />
           )} />
+          <Route path='/pinterest' render={() => (
+            isAuthenticated
+            ? <SavedItems
+              createFlashMessage={this.createFlashMessage}
+              saved={this.state.saved} />
+            : <Redirect to={{ pathname: '/login' }} />
+          )} />
+          <Route path='/text-commas' render={() => (
+            isAuthenticated
+            ? <SavedItems
+              createFlashMessage={this.createFlashMessage}
+              saved={this.state.saved} />
+            : <Redirect to={{ pathname: '/login' }} />
+          )} />
+          <Route path='/text-line-breaks' render={() => (
+            isAuthenticated
+            ? <TextInput
+              delimiter='line-break'
+              submitText={this.submitText} />
+            : <Redirect to={{ pathname: '/login' }} />
+          )} />
           <Route component={NotFound} />
         </Switch>
       </div>
@@ -190,4 +236,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default App;
