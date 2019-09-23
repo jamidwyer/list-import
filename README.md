@@ -5,8 +5,9 @@ Still working through:
 https://mherman.org/blog/developing-microservices-node-react-docker/
 
 Currently, to start things up, this might work:
-`NODE_ENV=development docker-compose up --build -d web-service`
-
+`export NODE_ENV=development`
+`docker-compose up --build -d web-service`
+`sh init_db.sh`
 
 ## Structure
 | Name            | Service| Container| Tech                 |
