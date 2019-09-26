@@ -13,14 +13,14 @@ class SearchBar extends Component {
         <input
           value={this.state.term}
           className="form-control"
-          placeholder="Search Movie Title..."
+          placeholder="Search..."
           onChange={event => this.setState({ term: event.target.value })}
         />
         <span className="input-group-btn">
           <button
             className="btn btn-success"
             type="button"
-            onClick={() => this.props.searchMovie(this.state.term)}
+            onClick={() => this.props.searchItem(this.state.term)}
           >
           Search!
           </button>

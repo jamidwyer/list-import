@@ -13,17 +13,6 @@ services:
     healthcheck:
       test: exit 0
 
-  movies-db:
-    container_name: movies-db
-    build: ./services/movies/src/db
-    ports:
-      - '5434:5432' # expose ports - HOST:CONTAINER
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    healthcheck:
-      test: exit 0
-
   users-service:
     container_name: users-service
     build: ./services/users/
@@ -43,27 +32,35 @@ services:
     links:
       - users-db
 
-  movies-service:
-    container_name: movies-service
-    build: ./services/movies/
+  lists-db:
+    container_name: lists-db
+    build: ./services/lists/src/db
+    ports:
+      - '5434:5432' # expose ports - HOST:CONTAINER
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
+
+  lists-service:
+    container_name: lists-service
+    build: ./services/lists/
     volumes:
-      - './services/movies:/usr/src/app'
-      - './services/movies/package.json:/usr/src/package.json'
+      - './services/lists:/usr/src/app'
+      - './services/lists/package.json:/usr/src/package.json'
     ports:
       - '3001:3000' # expose ports - HOST:CONTAINER
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@movies-db:5432/movies_dev
-      - DATABASE_TEST_URL=postgres://postgres:postgres@movies-db:5432/movies_test
+      - DATABASE_URL=postgres://postgres:postgres@lists-db:5432/lists_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@lists-db:5432/lists_test
       - NODE_ENV=${NODE_ENV}
       - TOKEN_SECRET=changeme
     depends_on:
-      movies-db:
+      lists-db:
         condition: service_healthy
-      users-service:
-        condition: service_started
     links:
-      - movies-db
-      - users-service
+      - lists-db
 
   web-service:
     container_name: web-service
@@ -78,27 +75,8 @@ services:
     depends_on:
       users-service:
         condition: service_started
-      movies-service:
+      lists-service:
         condition: service_started
     links:
       - users-service
-      - movies-service
-
-  swagger:
-    container_name: swagger
-    build: ./services/movies/swagger/
-    volumes:
-      - './services/movies/swagger:/usr/src/app'
-      - '/usr/src/app/node_modules'
-    ports:
-      - '3003:3001' # expose ports - HOST:CONTAINER
-    environment:
-      - NODE_ENV=${NODE_ENV}
-    depends_on:
-      users-service:
-        condition: service_started
-      movies-service:
-        condition: service_started
-    links:
-      - users-service
-      - movies-service
+      - lists-service

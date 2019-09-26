@@ -1,43 +1,42 @@
-import React, {Component} from 'react'
-import { Route, Redirect, Switch, Link } from 'react-router-dom'
-import axios from 'axios'
-
-const API_URL = 'http://www.omdbapi.com/?apikey=c5a8df09&s='; // sample
-const USERS_SERVICE_URL = process.env.REACT_APP_USERS_SERVICE_URL;
-const MOVIES_SERVICE_URL = process.env.REACT_APP_MOVIES_SERVICE_URL;
-
-
+import React, {Component} from 'react';
+import { Route, Redirect, Switch, Link } from 'react-router-dom';
+import axios from 'axios';
 import './App.css';
 
 import SearchBar from './components/SearchBar';
-import MovieList from './components/MovieList';
+import ItemList from './components/ItemList';
 import LoginForm from './components/LoginForm';
+import TextInput from './components/TextInput';
 import RegisterForm from './components/RegisterForm';
 import FlashMessages from './components/FlashMessages';
 import NotFound from './components/NotFound';
-import SavedMovies from './components/SavedMovies';
+import SavedItems from './components/SavedItems';
+
+const API_URL = 'http://www.omdbapi.com/?apikey=c5a8df09&s='; // sample
+const USERS_SERVICE_URL = process.env.REACT_APP_USERS_SERVICE_URL;
+const LISTS_SERVICE_URL = process.env.REACT_APP_LISTS_SERVICE_URL;
 
 class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      movies: [],
+      lists: [],
       saved: [],
       flashMessages: [],
       isAuthenticated: false
     }
-    this.searchMovie('land before time')
+    this.searchItem('wizard of oz')
     this.registerUser = this.registerUser.bind(this)
     this.loginUser = this.loginUser.bind(this)
     this.logoutUser = this.logoutUser.bind(this)
     this.deleteFlashMessage = this.deleteFlashMessage.bind(this)
     this.createFlashMessage = this.createFlashMessage.bind(this)
-    this.saveMovie = this.saveMovie.bind(this)
-    this.getMovies = this.getMovies.bind(this)
+    this.saveItem = this.saveItem.bind(this)
+    this.getLists = this.getLists.bind(this)
   }
-  searchMovie(term) {
+  searchItem(term) {
     axios.get(`${API_URL}${term}`)
-    .then((res) => { this.setState({ movies: res.data.Search }); })
+    .then((res) => { this.setState({ items: res.data.Search }); })
     .catch((err) => { console.log(err); })
   }
   createFlashMessage (text, type = 'success') {
@@ -68,7 +67,7 @@ class App extends Component {
       this.setState({ isAuthenticated: true })
       this.createFlashMessage('You successfully registered! Welcome!')
       this.props.history.push('/')
-      this.getMovies()
+      this.getLists()
     })
     .catch((error) => {
       const errorMessage = error.response.data.error
@@ -83,7 +82,7 @@ class App extends Component {
       this.setState({ isAuthenticated: true })
       this.createFlashMessage('You successfully logged in! Welcome!')
       this.props.history.push('/')
-      this.getMovies()
+      this.getLists()
     })
     .catch((error) => {
       callback('Something went wrong')
@@ -99,12 +98,12 @@ class App extends Component {
   getCurrentUser () {
     return window.localStorage.user
   }
-  saveMovie (movie) {
+  saveItem (item) {
     const options = {
-      url: `${MOVIES_SERVICE_URL}/movies`,
+      url: 'http://localhost:3001/lists',
       method: 'post',
       data: {
-        title: movie
+        title: item
       },
       headers: {
         'Content-Type': 'application/json',
@@ -112,12 +111,35 @@ class App extends Component {
       }
     };
     return axios(options)
-    .then((res) => { this.getMovies() })
+    .then((res) => { this.getLists() })
     .catch((error) => { console.log(error); })
   }
-  getMovies() {
+  submitText (userData, callback) {
+    // TODO: split by delimiter
+    // TODO: send the text through to lists and items
+    return axios.post('http://localhost:3000/items', userData)
+      .then((res) => {
+        this.createFlashMessage('Saved items')
+        this.props.history.push('/')
+        this.getItems()
+      })
+      .catch((error) => {
+        callback('Something went wrong')
+      }).then((res) => {
+        axios.post('http://localhost:3000/lists', res)
+        .then((res) => {
+          this.createFlashMessage('Saved list')
+          this.props.history.push('/')
+          this.getLists()
+        })
+        .catch((error) => {
+          callback('Something went wrong')
+        })
+      })
+  }
+  getLists() {
     const options = {
-      url: `${MOVIES_SERVICE_URL}/movies/user`,
+      url: 'http://localhost:3001/lists/user',
       method: 'get',
       headers: {
         'Content-Type': 'application/json',
@@ -142,15 +164,17 @@ class App extends Component {
           <Route exact path='/' render={() => (
             isAuthenticated
             ? <div className="container text-center">
-                <h1>OMDB Movie Search</h1>
-                <SearchBar searchMovie={this.searchMovie.bind(this)} />
+                <h1>List Source</h1>
+                <Link to='/text-line-breaks'>Text separated by line breaks</Link>
+                <Link to='/pinterest'>Pinterest</Link>
+                <Link to='/text-commas'>Text separated by commas (CSV)</Link>
+                <SearchBar searchItem={this.searchItem.bind(this)} />
                 <a href="" onClick={this.logoutUser}>Logout</a>&nbsp;&#124;&nbsp;<Link to='/collection'>Collection</Link>
-                <br/><br/><br/>
-                <MovieList
-                  movies={this.state.movies}
+                <ItemList
+                  items={this.state.items}
                   isAuthenticated={isAuthenticated}
                   getCurrentUser={this.getCurrentUser}
-                  saveMovie={this.saveMovie}
+                  saveItem={this.saveItem}
                 />
               </div>
             : <Redirect to={{
@@ -173,9 +197,30 @@ class App extends Component {
           )} />
           <Route path='/collection' render={() => (
             isAuthenticated
-            ? <SavedMovies
+            ? <SavedItems
               createFlashMessage={this.createFlashMessage}
               saved={this.state.saved} />
+            : <Redirect to={{ pathname: '/login' }} />
+          )} />
+          <Route path='/pinterest' render={() => (
+            isAuthenticated
+            ? <SavedItems
+              createFlashMessage={this.createFlashMessage}
+              saved={this.state.saved} />
+            : <Redirect to={{ pathname: '/login' }} />
+          )} />
+          <Route path='/text-commas' render={() => (
+            isAuthenticated
+            ? <SavedItems
+              createFlashMessage={this.createFlashMessage}
+              saved={this.state.saved} />
+            : <Redirect to={{ pathname: '/login' }} />
+          )} />
+          <Route path='/text-line-breaks' render={() => (
+            isAuthenticated
+            ? <TextInput
+              delimiter='line-break'
+              submitText={this.submitText} />
             : <Redirect to={{ pathname: '/login' }} />
           )} />
           <Route component={NotFound} />
@@ -185,4 +230,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default App;

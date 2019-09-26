@@ -6,11 +6,11 @@ function createUser(req) {
   const salt = bcrypt.genSaltSync();
   const hash = bcrypt.hashSync(req.body.password, salt);
   return knex('users')
-  .insert({
-    username: req.body.username,
-    password: hash,
-  })
-  .returning('*');
+    .insert({
+      username: req.body.username,
+      password: hash,
+    })
+    .returning('*');
 }
 
 function getUser(username) {
@@ -38,15 +38,15 @@ function ensureAuthenticated(req, res, next) {
       });
     }
     return knex('users').where({ id: parseInt(payload.sub, 10) }).first()
-    .then((user) => {
-      req.user = user.id;
-      return next();
-    })
-    .catch(() => {
-      return res.status(500).json({
-        status: 'error',
+      .then((user) => {
+        req.user = user.id;
+        return next();
+      })
+      .catch(() => {
+        return res.status(500).json({
+          status: 'error',
+        });
       });
-    });
   });
 }
 /* eslint-enable consistent-return */

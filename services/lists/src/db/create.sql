@@ -1,0 +1,2 @@
+CREATE DATABASE lists_dev;
+CREATE DATABASE lists_test;
