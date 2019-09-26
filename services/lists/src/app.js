@@ -3,7 +3,15 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+<<<<<<< HEAD
+<<<<<<< HEAD:services/lists/src/app.js
 const routes = require('./routes/lists');
+=======
+const routes = require('./routes/items');
+>>>>>>> 5e917d3bcc2f7aff11e29fa9caa72b2eeda5c056:services/items/src/app.js
+=======
+const routes = require('./routes/lists');
+>>>>>>> 5e917d3bcc2f7aff11e29fa9caa72b2eeda5c056
 
 const app = express();
 
@@ -19,7 +27,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+<<<<<<< HEAD
+<<<<<<< HEAD:services/lists/src/app.js
 app.use('/lists', routes);
+=======
+app.use('/items', routes);
+>>>>>>> 5e917d3bcc2f7aff11e29fa9caa72b2eeda5c056:services/items/src/app.js
+=======
+app.use('/lists', routes);
+>>>>>>> 5e917d3bcc2f7aff11e29fa9caa72b2eeda5c056
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');
