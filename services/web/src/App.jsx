@@ -3,10 +3,6 @@ import { Route, Redirect, Switch, Link } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
 
-const API_URL = 'http://www.omdbapi.com/?apikey=c5a8df09&s='; // sample
-const USERS_SERVICE_URL = process.env.REACT_APP_USERS_SERVICE_URL;
-const LISTS_SERVICE_URL = process.env.REACT_APP_LISTS_SERVICE_URL;
-
 import SearchBar from './components/SearchBar';
 import ItemList from './components/ItemList';
 import LoginForm from './components/LoginForm';
@@ -16,7 +12,9 @@ import FlashMessages from './components/FlashMessages';
 import NotFound from './components/NotFound';
 import SavedItems from './components/SavedItems';
 
-const API_URL = 'http://www.omdbapi.com/?apikey=5e859cf9&s=';
+const API_URL = 'http://www.omdbapi.com/?apikey=c5a8df09&s='; // sample
+const USERS_SERVICE_URL = process.env.REACT_APP_USERS_SERVICE_URL;
+const LISTS_SERVICE_URL = process.env.REACT_APP_LISTS_SERVICE_URL;
 
 class App extends Component {
   constructor (props) {
