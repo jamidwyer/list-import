@@ -32,11 +32,41 @@ services:
     links:
       - users-db
 
+  items-db:
+    container_name: items-db
+    build: ./services/items/src/db
+    ports:
+      - '5434:5432' # expose ports - HOST:CONTAINER
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
+
+  items-service:
+    container_name: items-service
+    build: ./services/items/
+    volumes:
+      - './services/items:/usr/src/app'
+      - './services/items/package.json:/usr/src/package.json'
+    ports:
+      - '3002:3000' # expose ports - HOST:CONTAINER
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@items-db:5432/items_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@items-db:5432/items_test
+      - NODE_ENV=${NODE_ENV}
+      - TOKEN_SECRET=changeme
+    depends_on:
+      items-db:
+        condition: service_healthy
+    links:
+      - items-db
+
   lists-db:
     container_name: lists-db
     build: ./services/lists/src/db
     ports:
-      - '5434:5432' # expose ports - HOST:CONTAINER
+      - '5435:5432' # expose ports - HOST:CONTAINER
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -75,8 +105,11 @@ services:
     depends_on:
       users-service:
         condition: service_started
+      items-service:
+        condition: service_started
       lists-service:
         condition: service_started
     links:
       - users-service
+      - items-service
       - lists-service

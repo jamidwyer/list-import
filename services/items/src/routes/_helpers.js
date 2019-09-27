@@ -6,7 +6,7 @@ let ensureAuthenticated = (req, res, next) => {
   }
   const options = {
     method: 'GET',
-    uri: 'http://items-service:3001/items/user',
+    uri: 'http://items-service:3002/items/user',
     json: true,
     headers: {
       'Content-Type': 'application/json',
@@ -14,11 +14,11 @@ let ensureAuthenticated = (req, res, next) => {
     },
   };
   return request(options)
-  .then((response) => {
-    req.user = response.user;
-    return next();
-  })
-  .catch((err) => { return next(err); });
+    .then((response) => {
+      req.user = response.user;
+      return next();
+    })
+    .catch((err) => { return next(err); });
 };
 
 if (process.env.NODE_ENV === 'test') {
