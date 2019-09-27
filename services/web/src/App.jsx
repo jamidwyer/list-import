@@ -117,7 +117,7 @@ class App extends Component {
   submitText (userData, callback) {
     // TODO: split by delimiter
     // TODO: send the text through to lists and items
-    return axios.post('http://localhost:3000/items', userData)
+    return axios.post('http://localhost:3002/items', userData)
       .then((res) => {
         this.createFlashMessage('Saved items')
         this.props.history.push('/')
@@ -126,7 +126,7 @@ class App extends Component {
       .catch((error) => {
         callback('Something went wrong')
       }).then((res) => {
-        axios.post('http://localhost:3000/lists', res)
+        axios.post('http://localhost:3001/lists', res)
         .then((res) => {
           this.createFlashMessage('Saved list')
           this.props.history.push('/')
@@ -219,8 +219,9 @@ class App extends Component {
           <Route path='/text-line-breaks' render={() => (
             isAuthenticated
             ? <TextInput
+              createFlashMessage={this.createFlashMessage}
               delimiter='line-break'
-              submitText={this.submitText} />
+              submitText={this.saveItem} />
             : <Redirect to={{ pathname: '/login' }} />
           )} />
           <Route component={NotFound} />

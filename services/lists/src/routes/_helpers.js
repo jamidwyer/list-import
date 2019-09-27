@@ -14,11 +14,11 @@ let ensureAuthenticated = (req, res, next) => {
     },
   };
   return request(options)
-  .then((response) => {
-    req.user = response.user;
-    return next();
-  })
-  .catch((err) => { return next(err); });
+    .then((response) => {
+      req.user = response.user;
+      return next();
+    })
+    .catch((err) => { return next(err); });
 };
 
 if (process.env.NODE_ENV === 'test') {

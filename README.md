@@ -10,7 +10,7 @@ Currently, to start things up, this might work:
 export NODE_ENV=development
 docker-compose down
 docker-compose up --build -d web-service
-docker-compose run users-service
+docker-compose run web-service
 sh init_db.sh
 ```
 
