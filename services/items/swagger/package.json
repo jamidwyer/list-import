@@ -1,10 +1,13 @@
 {
   "scripts": {
-	   "start": "gulp --gulpfile gulpfile.js"
+    "start": "gulp --gulpfile gulpfile.js"
   },
   "dependencies": {
     "connect": "^3.2.0",
     "js-yaml": "^3.3.0",
-    "swagger-tools": "0.10.1"
+    "swagger-tools": "^0.10.4"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2"
   }
 }
