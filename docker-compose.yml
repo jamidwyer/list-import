@@ -113,3 +113,23 @@ services:
       - users-service
       - items-service
       - lists-service
+
+  swagger:
+    container_name: swagger
+    build: ./services/items/swagger/
+    volumes:
+      - './services/items/swagger:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    ports:
+      - '3003:3002' # expose ports - HOST:CONTAINER
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    depends_on:
+      users-service:
+        condition: service_started
+      items-service:
+        condition: service_started
+    links:
+      - users-service
+      - items-service
+
