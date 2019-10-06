@@ -30,11 +30,11 @@ add new item
  */
 router.post('/', routeHelpers.ensureAuthenticated, (req, res, next) => {
   req.body.user_id = req.user;
-  return queries.addItem(req.body)
+  return queries.addItems(req.body)
     .then(() => {
       res.json({
         status: 'success',
-        data: 'Item Added!',
+        data: 'Items Added!',
       });
     })
     .catch((err) => { return next(err); });

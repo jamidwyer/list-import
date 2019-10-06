@@ -3,6 +3,7 @@ exports.up = (knex) => {
     table.increments();
     table.integer('user_id').notNullable();
     table.string('title').notNullable();
+    table.string('list_id').notNullable();
     table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'));
   });
 };

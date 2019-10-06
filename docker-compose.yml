@@ -13,6 +13,17 @@ services:
     healthcheck:
       test: exit 0
 
+  lists-db:
+    container_name: lists-db
+    build: ./services/lists/src/db
+    ports:
+      - '5434:5432' # expose ports - HOST:CONTAINER
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
+
   users-service:
     container_name: users-service
     build: ./services/users/
@@ -32,11 +43,55 @@ services:
     links:
       - users-db
 
+  lists-service:
+    container_name: lists-service
+    build: ./services/lists/
+    volumes:
+      - './services/lists:/usr/src/app'
+      - './services/lists/package.json:/usr/src/package.json'
+    ports:
+      - '3001:3000' # expose ports - HOST:CONTAINER
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@lists-db:5432/lists_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@lists-db:5432/lists_test
+      - NODE_ENV=${NODE_ENV}
+      - TOKEN_SECRET=changeme
+    depends_on:
+      lists-db:
+        condition: service_healthy
+      users-service:
+        condition: service_started
+    links:
+      - lists-db
+      - users-service
+
+  web-service:
+    container_name: web-service
+    build: ./services/web/
+    volumes:
+      - './services/web:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    ports:
+      - '3007:3006' # expose ports - HOST:CONTAINER
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    depends_on:
+      users-service:
+        condition: service_started
+      items-service:
+        condition: service_started
+      lists-service:
+        condition: service_started
+    links:
+      - users-service
+      - items-service
+      - lists-service
+
   items-db:
     container_name: items-db
     build: ./services/items/src/db
     ports:
-      - '5434:5432' # expose ports - HOST:CONTAINER
+      - '5436:5432' # expose ports - HOST:CONTAINER
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -61,58 +116,7 @@ services:
         condition: service_healthy
     links:
       - items-db
-
-  lists-db:
-    container_name: lists-db
-    build: ./services/lists/src/db
-    ports:
-      - '5435:5432' # expose ports - HOST:CONTAINER
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    healthcheck:
-      test: exit 0
-
-  lists-service:
-    container_name: lists-service
-    build: ./services/lists/
-    volumes:
-      - './services/lists:/usr/src/app'
-      - './services/lists/package.json:/usr/src/package.json'
-    ports:
-      - '3001:3000' # expose ports - HOST:CONTAINER
-    environment:
-      - DATABASE_URL=postgres://postgres:postgres@lists-db:5432/lists_dev
-      - DATABASE_TEST_URL=postgres://postgres:postgres@lists-db:5432/lists_test
-      - NODE_ENV=${NODE_ENV}
-      - TOKEN_SECRET=changeme
-    depends_on:
-      lists-db:
-        condition: service_healthy
-    links:
-      - lists-db
-
-  web-service:
-    container_name: web-service
-    build: ./services/web/
-    volumes:
-      - './services/web:/usr/src/app'
-      - '/usr/src/app/node_modules'
-    ports:
-      - '3007:3006' # expose ports - HOST:CONTAINER
-    environment:
-      - NODE_ENV=${NODE_ENV}
-    depends_on:
-      users-service:
-        condition: service_started
-      items-service:
-        condition: service_started
-      lists-service:
-        condition: service_started
-    links:
       - users-service
-      - items-service
-      - lists-service
 
   swagger:
     container_name: swagger
@@ -121,15 +125,18 @@ services:
       - './services/items/swagger:/usr/src/app'
       - '/usr/src/app/node_modules'
     ports:
-      - '3003:3002' # expose ports - HOST:CONTAINER
+      - '3003:3001' # expose ports - HOST:CONTAINER
     environment:
       - NODE_ENV=${NODE_ENV}
     depends_on:
       users-service:
         condition: service_started
+      lists-service:
+        condition: service_started
       items-service:
         condition: service_started
     links:
       - users-service
+      - lists-service
       - items-service
 

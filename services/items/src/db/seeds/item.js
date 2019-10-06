@@ -3,6 +3,8 @@ exports.seed = (knex) => {
     .then(() => {
       knex('items').insert({
         item_id: 1,
+        list_id: 1,
+        user_id: 1,
         title: 'milk',
       })  // eslint-disable-line
     })

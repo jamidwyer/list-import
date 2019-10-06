@@ -31,7 +31,7 @@ class App extends Component {
     this.logoutUser = this.logoutUser.bind(this)
     this.deleteFlashMessage = this.deleteFlashMessage.bind(this)
     this.createFlashMessage = this.createFlashMessage.bind(this)
-    this.saveItem = this.saveItem.bind(this)
+    this.saveItems = this.saveItems.bind(this)
     this.getLists = this.getLists.bind(this)
   }
   searchItem(term) {
@@ -98,12 +98,14 @@ class App extends Component {
   getCurrentUser () {
     return window.localStorage.user
   }
-  saveItem (item) {
+  saveItems (item) {
     const options = {
-      url: 'http://localhost:3001/lists',
+      url: 'http://localhost:3002/items',
       method: 'post',
       data: {
-        title: item
+        list_id: 1,
+        title: item.text,
+        list_name: item["list-name"]
       },
       headers: {
         'Content-Type': 'application/json',
@@ -174,7 +176,7 @@ class App extends Component {
                   items={this.state.items}
                   isAuthenticated={isAuthenticated}
                   getCurrentUser={this.getCurrentUser}
-                  saveItem={this.saveItem}
+                  saveItems={this.saveItems}
                 />
               </div>
             : <Redirect to={{
@@ -221,7 +223,7 @@ class App extends Component {
             ? <TextInput
               createFlashMessage={this.createFlashMessage}
               delimiter='line-break'
-              submitText={this.saveItem} />
+              submitText={this.saveItems} />
             : <Redirect to={{ pathname: '/login' }} />
           )} />
           <Route component={NotFound} />
