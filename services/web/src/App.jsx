@@ -3,7 +3,7 @@ import { Route, Redirect, Switch, Link } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
 
-import SearchBar from './components/SearchBar';
+// import SearchBar from './components/SearchBar';
 import ItemList from './components/ItemList';
 import LoginForm from './components/LoginForm';
 import TextInput from './components/TextInput';
@@ -82,7 +82,7 @@ class App extends Component {
       this.setState({ isAuthenticated: true })
       this.createFlashMessage('You successfully logged in! Welcome!')
       this.props.history.push('/')
-      this.getLists()
+      this.getLists(res.data.user);
     })
     .catch((error) => {
       callback('Something went wrong')
@@ -98,14 +98,32 @@ class App extends Component {
   getCurrentUser () {
     return window.localStorage.user
   }
-  saveItems (item) {
+  saveItems (userInput) {
     const options = {
       url: 'http://localhost:3002/items',
       method: 'post',
       data: {
         list_id: 1,
-        title: item.text,
-        list_name: item["list-name"]
+        title: userInput.text,
+        list_name: userInput["list-name"]
+      },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${window.localStorage.authToken}`
+      }
+    };
+    return axios(options)
+    .then((res) => { this.saveList(userInput) })
+    .catch((error) => { console.log(error); })
+  }
+  saveList (userInput) {
+    const options = {
+      url: 'http://localhost:3001/lists',
+      method: 'post',
+      data: {
+        list_id: 1,
+        user_id: 1,
+        title: userInput["list-name"]
       },
       headers: {
         'Content-Type': 'application/json',
@@ -139,7 +157,7 @@ class App extends Component {
         })
       })
   }
-  getLists() {
+  getLists(userId) {
     const options = {
       url: 'http://localhost:3001/lists/user',
       method: 'get',
@@ -150,7 +168,7 @@ class App extends Component {
     };
     return axios(options)
     .then((res) => {
-      this.setState({ saved: res.data.data });
+      this.setState({ items: res.data.data });
     })
     .catch((err) => { console.log(err); })
   }
@@ -167,11 +185,10 @@ class App extends Component {
             isAuthenticated
             ? <div className="container text-center">
                 <h1>List Source</h1>
-                <Link to='/text-line-breaks'>Text separated by line breaks</Link>
-                <Link to='/pinterest'>Pinterest</Link>
+                <Link to='/text-line-breaks'>Text separated by line breaks</Link> | 
+                <Link to='/pinterest'>Pinterest</Link> | 
                 <Link to='/text-commas'>Text separated by commas (CSV)</Link>
-                <SearchBar searchItem={this.searchItem.bind(this)} />
-                <a href="" onClick={this.logoutUser}>Logout</a>&nbsp;&#124;&nbsp;<Link to='/collection'>Collection</Link>
+                {/* <SearchBar searchItem={this.searchItem.bind(this)} /> */}
                 <ItemList
                   items={this.state.items}
                   isAuthenticated={isAuthenticated}
@@ -196,13 +213,6 @@ class App extends Component {
             : <LoginForm
               createFlashMessage={this.createFlashMessage}
               loginUser={this.loginUser} />
-          )} />
-          <Route path='/collection' render={() => (
-            isAuthenticated
-            ? <SavedItems
-              createFlashMessage={this.createFlashMessage}
-              saved={this.state.saved} />
-            : <Redirect to={{ pathname: '/login' }} />
           )} />
           <Route path='/pinterest' render={() => (
             isAuthenticated

@@ -37,7 +37,8 @@ router.post('/', routeHelpers.ensureAuthenticated, (req, res, next) => {
         data: 'List Added!',
       });
     })
-    .catch((err) => { return next(err); });
+    .catch((err) => { 
+      return next(err); });
 });
 
 module.exports = router;

@@ -6,9 +6,9 @@ const ItemList = (props) => {
     <div className="text-center">
       {props.items.map(item => (
         <ItemCard
-          key={item.imdbID}
-          title={item.Title}
-          posterUrl={item.Poster}
+          key={item.list_id}
+          title={item.title}
+          imageUrl={item.imageUrl}
           saveItem={props.saveItem}
         />
       ))}
