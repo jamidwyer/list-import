@@ -1,14 +1,14 @@
 const knex = require('./connection');
 
-function getSavedItems(itemId) {
-  return knex('items').select().where('item_id', itemId);
+function getSavedItems(listId) {
+  return knex('items').select().where('list_id', listId);
 }
 
-function addItem(obj) {
+function addItems(obj) {
   return knex('items').insert(obj);
 }
 
 module.exports = {
   getSavedItems,
-  addItem,
+  addItems,
 };

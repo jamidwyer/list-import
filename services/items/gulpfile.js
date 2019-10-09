@@ -10,19 +10,11 @@ gulp.task('start', () => {
   nodemon({
     script: './src/server',
     ext: 'js html',
-    tasks: ['lint'],
   });
 });
-
-gulp.task('lint', () => (
-  gulp.src(['src/**/*.js', '!node_modules/**'])
-  .pipe(eslint())
-  .pipe(eslint.format())
-  .pipe(eslint.failAfterError())
-));
 
 /*
 default
  */
 
-gulp.task('default', gulp.parallel('start', 'lint'));
+gulp.task('default', gulp.parallel('start'));

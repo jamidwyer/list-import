@@ -3,22 +3,14 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-<<<<<<< HEAD
 const routes = require('./routes/items');
-=======
-<<<<<<< HEAD:services/lists/src/app.js
-const routes = require('./routes/lists');
-=======
-const routes = require('./routes/items');
->>>>>>> 5e917d3bcc2f7aff11e29fa9caa72b2eeda5c056:services/items/src/app.js
->>>>>>> 5e917d3bcc2f7aff11e29fa9caa72b2eeda5c056
 
 const app = express();
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With');
   next();
 });
 
@@ -27,15 +19,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-<<<<<<< HEAD
 app.use('/items', routes);
-=======
-<<<<<<< HEAD:services/lists/src/app.js
-app.use('/lists', routes);
-=======
-app.use('/items', routes);
->>>>>>> 5e917d3bcc2f7aff11e29fa9caa72b2eeda5c056:services/items/src/app.js
->>>>>>> 5e917d3bcc2f7aff11e29fa9caa72b2eeda5c056
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');

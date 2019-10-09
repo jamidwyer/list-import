@@ -1,5 +1,5 @@
 const app = require('connect')();
-const http = require('http');
+import http from 'http';
 const swaggerTools = require('swagger-tools');
 const jsyaml = require('js-yaml');
 const fs = require('fs');

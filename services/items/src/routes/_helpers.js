@@ -6,19 +6,23 @@ let ensureAuthenticated = (req, res, next) => {
   }
   const options = {
     method: 'GET',
-    uri: 'http://items-service:3001/items/user',
+    uri: 'http://users-service:3000/users/user',
     json: true,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${req.headers.authorization.split(' ')[1]}`,
     },
   };
+  console.log(options);
   return request(options)
   .then((response) => {
+    console.log(response);
     req.user = response.user;
     return next();
   })
-  .catch((err) => { return next(err); });
+  .catch((err) => { 
+    console.log(err);
+    return next(err); });
 };
 
 if (process.env.NODE_ENV === 'test') {

@@ -28,7 +28,7 @@ class TextInput extends Component {
   }
   render () {
     const { delimiter } = this.props;
-    const { text } = this.state;
+    const { listName, text } = this.state;
     return (
       <div className="row">
         <div className="col-md-6">
@@ -38,6 +38,22 @@ class TextInput extends Component {
               this.onSubmit(event)
             }}
             className='form-horizontal'>
+            <div className='form-group'>
+              <label
+                htmlFor='list-name'
+                className='col-md-2 control-label'>
+                List Name
+              </label>
+              <div className='col-md-10'>
+                <input
+                  type='text'
+                  className='form-control'
+                  id='list-name'
+                  name='list-name'
+                  value={listName}
+                  onChange={this.handleInputChange} />
+              </div>
+            </div>
             <div className='form-group'>
               <label
                 htmlFor='text'

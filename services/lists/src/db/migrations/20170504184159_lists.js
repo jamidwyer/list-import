@@ -1,6 +1,6 @@
 exports.up = (knex) => {
   return knex.schema.createTable('lists', (table) => {
-    table.increments();
+    table.increments('list_id');
     table.integer('user_id').notNullable();
     table.string('title').notNullable();
     table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'));

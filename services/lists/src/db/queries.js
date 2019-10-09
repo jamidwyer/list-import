@@ -1,7 +1,8 @@
 const knex = require('./connection');
 
 function getSavedLists(userId) {
-  return knex('lists').select().where('user_id', userId);
+  const lists = knex('lists').select().where('user_id', userId);
+  return lists;
 }
 
 function addList(obj) {
