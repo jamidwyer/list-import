@@ -1,10 +1,11 @@
-# Microservice Lists
+# List Importer
 
 ## Summary
-Still working through:
 https://mherman.org/blog/developing-microservices-node-react-docker/
 
-Currently, to start things up, this might work:
+Clone this repo.
+
+Start things up:
 
 ```
 export NODE_ENV=development
@@ -19,7 +20,13 @@ sh init_db.sh
 | Web             | Web    | web      | React, React-Router  |
 | Lists API       | Lists  | lists    | Node, Express        |
 | Lists DB        | Lists  | lists-db | Postgres             |
-| Swagger         | Lists  | swagger  | Swagger UI           |
 | Users API       | Users  | users    | Node, Express        |
 | Users DB        | Users  | users-db | Postgres             |
-| Functional Tests| Test   | n/a      | TestCafe             |
+| Items API       | Items  | items    | Node, Express        |
+| Items DB        | Items  | items-db | Postgres             |
+| Swagger         | Lists  | swagger  | Swagger UI           |
+
+## Thank you!
+Because I wanted node, postgres, and Docker...
+https://mherman.org/blog/developing-microservices-node-react-docker/
+
