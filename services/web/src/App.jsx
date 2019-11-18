@@ -6,6 +6,7 @@ import './App.css';
 // import SearchBar from './components/SearchBar';
 import ItemList from './components/ItemList';
 import LoginForm from './components/LoginForm';
+import Page from './components/Page';
 import TextInput from './components/TextInput';
 import RegisterForm from './components/RegisterForm';
 import FlashMessages from './components/FlashMessages';
@@ -25,7 +26,6 @@ class App extends Component {
       flashMessages: [],
       isAuthenticated: false
     }
-    this.searchItem('wizard of oz')
     this.registerUser = this.registerUser.bind(this)
     this.loginUser = this.loginUser.bind(this)
     this.logoutUser = this.logoutUser.bind(this)
@@ -33,11 +33,6 @@ class App extends Component {
     this.createFlashMessage = this.createFlashMessage.bind(this)
     this.saveItems = this.saveItems.bind(this)
     this.getLists = this.getLists.bind(this)
-  }
-  searchItem(term) {
-    axios.get(`${API_URL}${term}`)
-    .then((res) => { this.setState({ items: res.data.Search }); })
-    .catch((err) => { console.log(err); })
   }
   createFlashMessage (text, type = 'success') {
     const message = { text, type }
@@ -121,7 +116,6 @@ class App extends Component {
       url: 'http://localhost:3001/lists',
       method: 'post',
       data: {
-        list_id: 1,
         user_id: 1,
         title: userInput["list-name"]
       },
@@ -173,7 +167,7 @@ class App extends Component {
     .catch((err) => { console.log(err); })
   }
   render () {
-    const {isAuthenticated, flashMessages} = this.state
+    const {isAuthenticated, flashMessages, items} = this.state
     return (
       <div className='App container'>
         <br/>
@@ -184,13 +178,15 @@ class App extends Component {
           <Route exact path='/' render={() => (
             isAuthenticated
             ? <div className="container text-center">
-                <h1>List Source</h1>
-                <Link to='/text-line-breaks'>Text separated by line breaks</Link> | 
-                <Link to='/pinterest'>Pinterest</Link> | 
-                <Link to='/text-commas'>Text separated by commas (CSV)</Link>
-                {/* <SearchBar searchItem={this.searchItem.bind(this)} /> */}
+                <h2>List Source</h2>
+                <ul>
+                  <li><Link to='/text-line-breaks'>Text separated by line breaks</Link></li>
+                  <li><Link to='/pinterest'>Pinterest</Link></li>
+                  <li><Link to='/text-commas'>Text separated by commas (CSV)</Link></li>
+                </ul>
+                <h2>Your Lists</h2>
                 <ItemList
-                  items={this.state.items}
+                  items={items}
                   isAuthenticated={isAuthenticated}
                   getCurrentUser={this.getCurrentUser}
                   saveItems={this.saveItems}
@@ -216,9 +212,7 @@ class App extends Component {
           )} />
           <Route path='/pinterest' render={() => (
             isAuthenticated
-            ? <SavedItems
-              createFlashMessage={this.createFlashMessage}
-              saved={this.state.saved} />
+            ? <Page route='pinterest' />
             : <Redirect to={{ pathname: '/login' }} />
           )} />
           <Route path='/text-commas' render={() => (
