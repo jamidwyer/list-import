@@ -9,7 +9,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.6",
     "dotenv": "~4.0.0",
-    "express": "^4.15.2",
+    "express": "^4.17.3",
     "jwt-simple": "^0.5.0",
     "knex": "^0.19.5",
     "moment": "^2.15.2",
